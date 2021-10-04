@@ -5,6 +5,19 @@
 
 int main(){
 
+    Eigen::Vector3f p(2, 1, 1)
+
+    /*
+     *      ^
+     *      |
+     *      |       * (2, 1)
+     *      |
+     *      -------------
+     * */
+
+
+
+
     // Basic Example of cpp
     std::cout << "Example of cpp \n";
     float a = 1.0, b = 2.0;
