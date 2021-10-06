@@ -56,7 +56,7 @@ static bool insideTriangle(int x, int y, const Vector3f* _v)
         |/              |
         a----------------
     */
-   Vector3f p(x, y, 1);
+   Vector3f p(x, y, 0);
 
    const Vector3f& a = _v[0];
    const Vector3f& b = _v[1];
@@ -75,11 +75,11 @@ static bool insideTriangle(int x, int y, const Vector3f* _v)
     Vector3f v_cp = p - c;
 
     // Get Direction
-    Vector3f d_ab = v_ab.cross(v_ap);
-    Vector3f d_bc = v_bc.cross(v_bp);
-    Vector3f d_ca = v_ca.cross(v_cp);
-
-    return d_ab.dot(d_bc) >= 0 && d_bc.dot(d_ca) >= 0 && d_ca.dot(d_ab) >= 0;
+    Vector3f d_ab = v_ap.cross(v_ab);
+    Vector3f d_bc = v_bp.cross(v_bc);
+    Vector3f d_ca = v_cp.cross(v_ca);
+    return (d_ab.z() > 0 && d_bc.z() > 0 && d_ca.z() > 0) || (d_ab.z() < 0 && d_bc.z() < 0 && d_ca.z() < 0);
+    // return d_ab.dot(d_bc) >= 0 && d_bc.dot(d_ca) >= 0 && d_ca.dot(d_ab) >= 0;
 }
 
 static std::tuple<float, float, float> computeBarycentric2D(float x, float y, const Vector3f* v)
@@ -177,8 +177,8 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
 
     
     // iterate through the pixel and find if the current pixel is inside the triangle
-    for (int x = min_x; x < max_x; x++) {
-        for (int y = min_y; y < max_y; y++)
+    for (int x = floor(min_x); x < max_x; x++) {
+        for (int y = floor(min_y); y < max_y; y++)
         {
             if (!insideTriangle(x, y, t.v))
             {
@@ -205,7 +205,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
             depth_buf[index] = z_interpolated;
 
             // TODO : set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
-            set_pixel(Vector3f(x, y, 1), t.getColor());
+            set_pixel(Vector3f(x, y, 0), t.getColor());
         }
         
     }
