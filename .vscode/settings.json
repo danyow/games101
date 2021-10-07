@@ -4,6 +4,7 @@
         "cmath": "cpp",
         "algorithm": "cpp",
         "vector": "cpp",
-        "eigen": "cpp"
+        "eigen": "cpp",
+        "iostream": "cpp"
     }
 }

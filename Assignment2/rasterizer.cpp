@@ -40,7 +40,8 @@ auto to_vec4(const Eigen::Vector3f& v3, float w = 1.0f)
 }
 
 
-static bool insideTriangle(int x, int y, const Vector3f* _v)
+// static bool insideTriangle(int x, int y, const Vector3f* _v)
+static bool insideTriangle(float x, float y, const Vector3f* _v)
 {   
     // TODO : Implement this function to check if the point (x, y) is inside the triangle represented by _v[0], _v[1], _v[2]
     //  _v0, v1, v2 in counter clockwise order_
@@ -188,32 +189,87 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
     for (int x = min_x; x < max_x; x++) {
         for (int y = min_y; y < max_y; y++)
         {
-            if (!insideTriangle(x, y, t.v))
+            /*
+                1: p[-----a-----] = 1/2
+                2: p[--a--|--b--] = 1/4 3/4
+                3: p[-a-|-b-|-c-] = 1/6 3/6 5/6
+            */
+            float k = 1.0f / (msaa * 2.0f);
+            // std::cout  << k << std::endl;
+            int count = 0;
+            for (size_t i = 0; i < msaa; i++)
             {
-                continue;
-            }
-            // inside
-            // If so, use the following code to get the interpolated z value.
-            //auto[alpha, beta, gamma] = computeBarycentric2D(x, y, t.v);
-            //float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
-            //float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
-            //z_interpolated *= w_reciprocal;
-            auto[alpha, beta, gamma] = computeBarycentric2D(x, y, t.v);
-            // w 倒数
-            float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
-            // z 插值
-            float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
-            z_interpolated *= w_reciprocal;
+                for (size_t j = 0; j < msaa; j++)
+                {
+                    float x_pos = x + (2 * i + 1) * k;
+                    float y_pos = y + (2 * j + 1) * k;
 
-            int index = get_index(x, y);
-            if (z_interpolated >= depth_buf[index]) 
+                    if (!insideTriangle(x_pos, y_pos, t.v))
+                    {
+                        continue;
+                    }
+                    
+                    // inside
+                    // If so, use the following code to get the interpolated z value.
+                    //auto[alpha, beta, gamma] = computeBarycentric2D(x, y, t.v);
+                    //float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
+                    //float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
+                    //z_interpolated *= w_reciprocal;
+                    auto[alpha, beta, gamma] = computeBarycentric2D(x_pos, y_pos, t.v);
+                    // w 倒数
+                    float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
+                    // z 插值
+                    float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
+                    z_interpolated *= w_reciprocal;
+
+                    // int index = get_index(x, y); // (height-1-y)*width + x;
+                    int index = (height * msaa - 1 - (y * msaa + j)) * width * msaa + x * msaa + i;
+
+                    if (-z_interpolated >= depth_buf[index]) 
+                    {
+                        continue;
+                    }
+                    
+                    depth_buf[index] = -z_interpolated;
+                    count ++;
+                }
+            }
+
+            // std::cout  << count << std::endl;
+            if (count != 0)
             {
-                continue;
+                // TODO : set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
+                set_pixel(Vector3f(x, y, 1), t.getColor() * (count / (msaa * msaa)));
             }
-            depth_buf[index] = -z_interpolated;
+            
+            
 
-            // TODO : set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
-            set_pixel(Vector3f(x, y, 0), t.getColor());
+            // if (!insideTriangle(x + 0.5, y + 0.5, t.v))
+            // {
+            //     continue;
+            // }
+            // // inside
+            // // If so, use the following code to get the interpolated z value.
+            // //auto[alpha, beta, gamma] = computeBarycentric2D(x + 0.5, y + 0.5, t.v);
+            // //float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
+            // //float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
+            // //z_interpolated *= w_reciprocal;
+            // auto[alpha, beta, gamma] = computeBarycentric2D(x, y, t.v);
+            // // w 倒数
+            // float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
+            // // z 插值
+            // float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
+            // z_interpolated *= w_reciprocal;
+
+            // int index = get_index(x, y);
+            // if (z_interpolated >= depth_buf[index]) 
+            // {
+            //     continue;
+            // }
+            // depth_buf[index] = -z_interpolated;
+
+            // // TODO : set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
+            // set_pixel(Vector3f(x, y, 0), t.getColor());
         }
         
     }
@@ -249,7 +305,7 @@ void rst::rasterizer::clear(rst::Buffers buff)
 rst::rasterizer::rasterizer(int w, int h) : width(w), height(h)
 {
     frame_buf.resize(w * h);
-    depth_buf.resize(w * h);
+    depth_buf.resize(w * h * msaa * msaa);
 }
 
 int rst::rasterizer::get_index(int x, int y)
