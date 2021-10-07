@@ -20,23 +20,46 @@ Eigen::Matrix4f get_view_matrix(Eigen::Vector3f eye_pos)
     return view;
 }
 
+
+Eigen::Matrix4f get_rotation(Eigen::Vector3f axis, float angle) {
+    // 04-00:16:12
+    Matrix4f model = Matrix4f::Identity();
+    Matrix3f R, I = Matrix3f::Identity();
+
+    float rad = MY_PI / 180.0f * angle;
+
+    auto n = axis.normalized();
+
+    Matrix3f N = Matrix3f::Identity();
+    N <<      0, -n.z(),  n.y(),
+          n.z(),      0, -n.x(),
+         -n.y(),  n.x(),      0;
+
+    R = I * cos(rad) + (1 - cos(rad)) * n * n.transpose() + sin(rad) * N;
+
+    model.block<3, 3>(0, 0) = R;
+
+    return model;
+}
+
 Eigen::Matrix4f get_model_matrix(float rotation_angle)
 {
     Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
 
     float rad = MY_PI / 180.0f * rotation_angle;
 
+    // 04-00:09:13  
     // Create the model matrix for rotating the triangle around the X axis.
-    model << 1,        0,         0, 0,
-             0, cos(rad), -sin(rad), 0,
-             0, sin(rad),  cos(rad), 0,
-             0,        0,         0, 1;
+    // model << 1,        0,         0, 0,
+    //          0, cos(rad), -sin(rad), 0,
+    //          0, sin(rad),  cos(rad), 0,
+    //          0,        0,         0, 1;
 
     // Create the model matrix for rotating the triangle around the Y axis.
-    model << cos(rad), 0, sin(rad), 0,
-                    0, 1,        0, 0,
-            -sin(rad), 0, cos(rad), 0,
-                    0, 0,        0, 1;
+    // model << cos(rad), 0, sin(rad), 0,
+    //                 0, 1,        0, 0,
+    //         -sin(rad), 0, cos(rad), 0,
+    //                 0, 0,        0, 1;
 
 
     // Create the model matrix for rotating the triangle around the Z axis.
@@ -46,11 +69,13 @@ Eigen::Matrix4f get_model_matrix(float rotation_angle)
                     0,         0, 0, 1;
 
     return model;
+    // TEST: Bonus
+    // return get_rotation(Vector3f(0, 0, 1), rotation_angle);
+    // return get_rotation(Vector3f(0, 1, 0), rotation_angle);
+    // return get_rotation(Vector3f(1, 0, 0), rotation_angle);
+    // return get_rotation(Vector3f(1, 1, 1), rotation_angle);
 }
 
-Eigen::Matrix4f get_rotation(Vector3f axis, float angle) {
-
-}
 
 Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
                                       float zNear, float zFar)
