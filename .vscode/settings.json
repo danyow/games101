@@ -3,6 +3,7 @@
         "random": "cpp",
         "cmath": "cpp",
         "algorithm": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "eigen": "cpp"
     }
 }

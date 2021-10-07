@@ -185,8 +185,8 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
 
     
     // iterate through the pixel and find if the current pixel is inside the triangle
-    for (int x = floor(min_x); x < max_x; x++) {
-        for (int y = floor(min_y); y < max_y; y++)
+    for (int x = min_x; x < max_x; x++) {
+        for (int y = min_y; y < max_y; y++)
         {
             if (!insideTriangle(x, y, t.v))
             {
@@ -210,14 +210,13 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
             {
                 continue;
             }
-            depth_buf[index] = z_interpolated;
+            depth_buf[index] = -z_interpolated;
 
             // TODO : set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
             set_pixel(Vector3f(x, y, 0), t.getColor());
         }
         
     }
-    // Segmentation fault
 }
 
 void rst::rasterizer::set_model(const Eigen::Matrix4f& m)
