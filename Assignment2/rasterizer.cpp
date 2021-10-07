@@ -45,10 +45,10 @@ static bool insideTriangle(int x, int y, const Vector3f* _v)
     // TODO : Implement this function to check if the point (x, y) is inside the triangle represented by _v[0], _v[1], _v[2]
     //  _v0, v1, v2 in counter clockwise order_
     /*  c----------------
-        |\ *p(x, y, z?) |
+        |\              |
         | \             |
         |  \            |
-        |   \           |
+        | p \           |
         |    b          |
         |   /           |
         |  /            |
@@ -62,24 +62,32 @@ static bool insideTriangle(int x, int y, const Vector3f* _v)
    const Vector3f& b = _v[1];
    const Vector3f& c = _v[2];
 
-    Vector3f v_ab = b - a;
-    Vector3f v_bc = c - b;
-    Vector3f v_ca = a - c;
+    Vector3f c_ap_ab = (p - a).cross(b - a);
+    Vector3f c_ac_ab = (c - a).cross(b - a);
 
-    // Vector3f v_pa = a - p;
-    // Vector3f v_pb = b - p;
-    // Vector3f v_pc = c - p;
+    Vector3f c_bp_bc = (p - b).cross(c - b);
+    Vector3f c_ba_bc = (a - b).cross(c - b);
 
-    Vector3f v_ap = p - a;
-    Vector3f v_bp = p - b;
-    Vector3f v_cp = p - c;
+    Vector3f c_cp_ca = (p - c).cross(a - c);
+    Vector3f c_cb_ca = (b - c).cross(a - c);
 
-    // Get Direction
-    Vector3f d_ab = v_ap.cross(v_ab);
-    Vector3f d_bc = v_bp.cross(v_bc);
-    Vector3f d_ca = v_cp.cross(v_ca);
-    return (d_ab.z() > 0 && d_bc.z() > 0 && d_ca.z() > 0) || (d_ab.z() < 0 && d_bc.z() < 0 && d_ca.z() < 0);
-    // return d_ab.dot(d_bc) >= 0 && d_bc.dot(d_ca) >= 0 && d_ca.dot(d_ab) >= 0;
+    /*    
+        from: ![caspar](http://games-cn.org/forums/topic/zuoye2sanjiaoxingdibianshangchuxianleyuanjiao/)
+        问题出在insideTriangle使用dot判断错误，假如
+            auto times_0 = (px – a).cross(b – a)
+            ap.cross(ab)
+        做叉乘那么对应的dot应该是和
+            (c – a).cross(b – a)
+            ac.cross(ab)
+        进行点乘，并且结果大于等于0；
+        表示这个点在这个夹角内，同理再计算其余两条边全部大于等于0则点在三角形内。
+        不过也可以不用dot来判断，直接取time_012三个值同时小于0或者同时大于0则点在三角形内。
+    */
+    
+    return c_ap_ab.dot(c_ac_ab) >= 0    // 
+        && c_bp_bc.dot(c_ba_bc) >= 0    //
+        && c_cp_ca.dot(c_cb_ca) >= 0    // 
+        ;
 }
 
 static std::tuple<float, float, float> computeBarycentric2D(float x, float y, const Vector3f* v)
