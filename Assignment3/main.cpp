@@ -50,7 +50,7 @@ Eigen::Matrix4f get_model_matrix(float angle)
 Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float zNear, float zFar)
 {
     // TODO: Use the same projection matrix from the previous assignments
-  // Students will implement this function
+    // Students will implement this function
 
     Eigen::Matrix4f projection, orthographic, translate, scale, viewport = Eigen::Matrix4f::Identity();
 
