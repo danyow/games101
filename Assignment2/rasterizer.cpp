@@ -194,12 +194,12 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
                 2: p[--a--|--b--] = 1/4 3/4
                 3: p[-a-|-b-|-c-] = 1/6 3/6 5/6
             */
-            float k = 1.0f / (msaa * 2.0f);
+            float k = 1.0f / (MSAA * 2.0f);
             // std::cout  << k << std::endl;
             int count = 0;
-            for (size_t i = 0; i < msaa; i++)
+            for (size_t i = 0; i < MSAA; i++)
             {
-                for (size_t j = 0; j < msaa; j++)
+                for (size_t j = 0; j < MSAA; j++)
                 {
                     float x_pos = x + (2 * i + 1) * k;
                     float y_pos = y + (2 * j + 1) * k;
@@ -222,24 +222,47 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
                     float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
                     z_interpolated *= w_reciprocal;
 
+                
+                    /*
+                        ## Index:
+
+                        x + (y) * width
+                        0, 1, 2, 3, 4,  
+                        5, 6, 7, 8, 9; 
+
+                        (x * msaa + i) + j * (width * msaa) + y * (width * msaa * msaa)
+                        | 0, 1|  2, 3|  4, 5|  6, 7|  8, 9| 
+                        |10,11| 12,13| 14,15| 16,17| 18,19|
+                        |20,21| 22,23| 24,25| 26,27| 28,29|
+                        |30,31| 32,33| 34,35| 36,37| 38,39|
+                    */
                     // int index = get_index(x, y); // (height-1-y)*width + x;
-                    int index = (height * msaa - 1 - (y * msaa + j)) * width * msaa + x * msaa + i;
+                    int index = (x * MSAA + i) + j * (width * MSAA) + y * (width * MSAA * MSAA);
 
                     if (-z_interpolated >= depth_buf[index]) 
                     {
                         continue;
                     }
                     
+                    color_buf[index] = t.getColor();
                     depth_buf[index] = -z_interpolated;
                     count ++;
                 }
             }
 
-            // std::cout  << count << std::endl;
-            if (count != 0)
+            if (count > 0)
             {
                 // TODO : set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
-                set_pixel(Vector3f(x, y, 1), t.getColor() * (count / (msaa * msaa)));
+                Vector3f final_color = Vector3f(0, 0, 0);
+                for (size_t i = 0; i < MSAA; i++)
+                {
+                    for (size_t j = 0; j < MSAA; j++)
+                    {
+                        int index = (x * MSAA + i) + j * (width * MSAA) + y * (width * MSAA * MSAA);
+                        final_color += (color_buf[index] / (float)(MSAA * MSAA));
+                    }
+                }
+                set_pixel(Vector3f(x, y, 0), final_color);
             }
             
             
@@ -295,6 +318,7 @@ void rst::rasterizer::clear(rst::Buffers buff)
     if ((buff & rst::Buffers::Color) == rst::Buffers::Color)
     {
         std::fill(frame_buf.begin(), frame_buf.end(), Eigen::Vector3f{0, 0, 0});
+        std::fill(color_buf.begin(), color_buf.end(), Eigen::Vector3f{0, 0, 0}); // Bonus
     }
     if ((buff & rst::Buffers::Depth) == rst::Buffers::Depth)
     {
@@ -305,7 +329,8 @@ void rst::rasterizer::clear(rst::Buffers buff)
 rst::rasterizer::rasterizer(int w, int h) : width(w), height(h)
 {
     frame_buf.resize(w * h);
-    depth_buf.resize(w * h * msaa * msaa);
+    color_buf.resize(w * h * MSAA * MSAA);
+    depth_buf.resize(w * h * MSAA * MSAA);
 }
 
 int rst::rasterizer::get_index(int x, int y)
