@@ -280,7 +280,107 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
     // Use: Instead of passing the triangle's color directly to the frame buffer, pass the color to the shaders first to get the final color;
     // Use: auto pixel_color = fragment_shader(payload);
 
- 
+    // TODO : Find out the bounding box of current triangle.
+
+    auto v = t.toVector4();
+    float max_x, max_y, min_x, min_y = 0; // Bounding Box
+    for (size_t index = 0; index < 3; index++)
+    {
+        float x = t.v[index].x();
+        float y = t.v[index].y();
+
+        if (index == 0)
+        {
+            min_x = max_x = x;
+            min_y = max_y = y;
+            continue;
+        } 
+        
+        min_x = min_x > x ? x : min_x;
+        min_y = min_y > y ? y : min_y;
+
+        max_x = max_x < x ? x : max_x;
+        max_y = max_y < y ? y : max_y;
+    }
+    
+    /*  
+          --------b   a: (min_x, min_y)
+          |       |   b: (max_x, max_y)
+          |       |
+        y |       |
+        ^ |       |   
+        | a--------
+        o---> x
+    */
+
+    
+    // iterate through the pixel and find if the current pixel is inside the triangle
+    for (int x = min_x; x < max_x; x++) {
+        for (int y = min_y; y < max_y; y++)
+        {
+            /*
+                1: p[-----a-----] = 1/2
+                2: p[--a--|--b--] = 1/4 3/4
+                3: p[-a-|-b-|-c-] = 1/6 3/6 5/6
+            */
+            float k = 1.0f / (MSAA * 2.0f);
+            // std::cout  << k << std::endl;
+            int count = 0;
+            for (size_t i = 0; i < MSAA; i++)
+            {
+                for (size_t j = 0; j < MSAA; j++)
+                {
+                    float x_pos = x + (2 * i + 1) * k;
+                    float y_pos = y + (2 * j + 1) * k;
+
+                    if (!insideTriangle(x_pos, y_pos, t.v))
+                    {
+                        continue;
+                    }
+                    
+
+                    auto[alpha, beta, gamma] = computeBarycentric2D(x_pos, y_pos, t.v);
+                    float Z = 1.0 / (alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
+                    float zp = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
+                    zp *= Z;
+
+                    int index = (x * MSAA + i) + j * (width * MSAA) + y * (width * MSAA * MSAA);
+
+                    if (-zp >= depth_buf[index]) 
+                    {
+                        continue;
+                    }
+
+                    auto interpolated_color = alpha * t.color[0] / v[0].w() + beta * t.color[1] / v[1].w() + gamma * t.color[2] / v[2].w();
+                    auto interpolated_normal = alpha * t.normal[0] / v[0].w() + beta * t.normal[1] / v[1].w() + gamma * t.normal[2] / v[2].w();
+                    auto interpolated_texcoords = alpha * t.tex_coords[0] / v[0].w() + beta * t.tex_coords[1] / v[1].w() + gamma * t.tex_coords[2] / v[2].w();
+                    auto interpolated_shadingcoords = alpha * view_pos[0] / v[0].w() + beta * view_pos[1] / v[1].w() + gamma * view_pos[2] / v[2].w();
+                    
+                    fragment_shader_payload payload( interpolated_color, interpolated_normal.normalized(), interpolated_texcoords, texture ? &*texture : nullptr);
+                    payload.view_pos = interpolated_shadingcoords;
+                    auto pixel_color = fragment_shader(payload);
+
+                    color_buf[index] = pixel_color;
+                    depth_buf[index] = -zp;
+                    count ++;
+                }
+            }
+
+            if (count > 0)
+            {
+                Vector3f final_color = Vector3f(0, 0, 0);
+                for (size_t i = 0; i < MSAA; i++)
+                {
+                    for (size_t j = 0; j < MSAA; j++)
+                    {
+                        int index = (x * MSAA + i) + j * (width * MSAA) + y * (width * MSAA * MSAA);
+                        final_color += (color_buf[index] / (float)(MSAA * MSAA));
+                    }
+                }
+                set_pixel(Vector2i(x, y), final_color);
+            }
+        }
+    }
 }
 
 void rst::rasterizer::set_model(const Eigen::Matrix4f& m)
@@ -303,6 +403,7 @@ void rst::rasterizer::clear(rst::Buffers buff)
     if ((buff & rst::Buffers::Color) == rst::Buffers::Color)
     {
         std::fill(frame_buf.begin(), frame_buf.end(), Eigen::Vector3f{0, 0, 0});
+        std::fill(color_buf.begin(), color_buf.end(), Eigen::Vector3f{0, 0, 0}); // Bonus
     }
     if ((buff & rst::Buffers::Depth) == rst::Buffers::Depth)
     {
@@ -313,7 +414,8 @@ void rst::rasterizer::clear(rst::Buffers buff)
 rst::rasterizer::rasterizer(int w, int h) : width(w), height(h)
 {
     frame_buf.resize(w * h);
-    depth_buf.resize(w * h);
+    color_buf.resize(w * h * MSAA * MSAA); // Bonus
+    depth_buf.resize(w * h * MSAA * MSAA); // Bonus
 
     texture = std::nullopt;
 }

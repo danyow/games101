@@ -109,11 +109,13 @@ namespace rst
         std::function<Eigen::Vector3f(vertex_shader_payload)> vertex_shader;
 
         std::vector<Eigen::Vector3f> frame_buf;
+        std::vector<Eigen::Vector3f> color_buf; // Bonus
         std::vector<float> depth_buf;
         int get_index(int x, int y);
 
         int width, height;
-
+        int MSAA = 1;   // Bonus
+        
         int next_id = 0;
         int get_next_id() { return next_id++; }
     };

@@ -298,8 +298,8 @@ void rst::rasterizer::clear(rst::Buffers buff)
 rst::rasterizer::rasterizer(int w, int h) : width(w), height(h)
 {
     frame_buf.resize(w * h);
-    color_buf.resize(w * h * MSAA * MSAA);
-    depth_buf.resize(w * h * MSAA * MSAA);
+    color_buf.resize(w * h * MSAA * MSAA); // Bonus
+    depth_buf.resize(w * h * MSAA * MSAA); // Bonus
 }
 
 int rst::rasterizer::get_index(int x, int y)
