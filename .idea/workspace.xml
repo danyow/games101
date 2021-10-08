@@ -9,7 +9,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8537eaca-d10c-495c-9105-8bb51be8d9bb" name="更改" comment="" />
+    <list default="true" id="8537eaca-d10c-495c-9105-8bb51be8d9bb" name="更改" comment="HW2.zip">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,7 +24,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1yDFJcOEfZkIGfh5NtjnW68ZI4H" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -41,11 +43,6 @@
     <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -66,7 +63,8 @@
       <workItem from="1633338747971" duration="2823000" />
       <workItem from="1633524486859" duration="2252000" />
       <workItem from="1633597366400" duration="484000" />
-      <workItem from="1633616273922" duration="125000" />
+      <workItem from="1633616273922" duration="779000" />
+      <workItem from="1633701336469" duration="207000" />
     </task>
     <task id="LOCAL-00001" summary="1 2 提交">
       <created>1633353562392</created>
@@ -75,7 +73,21 @@
       <option name="project" value="LOCAL" />
       <updated>1633353562392</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="HW1.zip">
+      <created>1633617046640</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1633617046640</updated>
+    </task>
+    <task id="LOCAL-00003" summary="HW2.zip">
+      <created>1633701536559</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1633701536559</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -95,6 +107,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="1 2 提交" />
-    <option name="LAST_COMMIT_MESSAGE" value="1 2 提交" />
+    <MESSAGE value="HW1.zip" />
+    <MESSAGE value="HW2.zip" />
+    <option name="LAST_COMMIT_MESSAGE" value="HW2.zip" />
   </component>
 </project>
