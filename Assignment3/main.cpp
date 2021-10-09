@@ -143,7 +143,8 @@ Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload& payload)
     if (payload.texture)
     {
         // TODO: Get the texture value at the texture coordinates of the current fragment
-
+        // This Api ???
+        return_color = payload.texture ->getColor(payload.tex_coords(0), payload.tex_coords(1));
     }
     Eigen::Vector3f texture_color;
     texture_color << return_color.x(), return_color.y(), return_color.z();
@@ -172,6 +173,34 @@ Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload& payload)
         // TODO: For each light source in the code, calculate what the *ambient*, *diffuse*, and *specular* 
         // components are. Then, accumulate that result on the *result_color* object.
 
+        // diffuse reflection
+        auto L = light.position;
+        auto P = point;
+        auto v = (eye_pos - P).normalized();
+        auto n = normal;
+        auto PL = L - P;
+        auto l = PL.normalized();
+
+        auto I = light.intensity;
+        auto r2 = PL.dot(PL); 
+
+        auto cos_lpn = n.dot(l);
+        auto Ld = kd.cwiseProduct(I) / r2 * std::max(0.0f, cos_lpn);
+
+        result_color += Ld;
+
+        // specular highlights
+        auto h = (v + l).normalized();
+        auto cos_nph = n.dot(h);
+        auto Ls = ks.cwiseProduct(I) / r2 * std::pow(std::max(0.0f, cos_nph), p);
+
+        result_color += Ls;
+
+        // ambient lighting
+        auto Ia = amb_light_intensity;
+        auto La = ka.cwiseProduct(Ia);
+
+        result_color += La;
     }
 
     return result_color * 255.f;
@@ -347,6 +376,14 @@ Eigen::Vector3f bump_fragment_shader(const fragment_shader_payload& payload)
 
     float kh = 0.2, kn = 0.1;
 
+    Eigen::Vector3f return_color = Vector3f(0, 0, 0);
+
+    if (payload.texture)
+    {
+        return_color = payload.texture -> getColor(payload.tex_coords(0), payload.tex_coords(1));
+    }
+    
+
     // TODO: Implement bump mapping here
     // Let n = normal = (x, y, z)
     // Vector t = (x*y/sqrt(x*x+z*z),sqrt(x*x+z*z),z*y/sqrt(x*x+z*z))
@@ -357,6 +394,86 @@ Eigen::Vector3f bump_fragment_shader(const fragment_shader_payload& payload)
     // Vector ln = (-dU, -dV, 1)
     // Normal n = normalize(TBN * ln)
 
+    // 10-00::
+
+    /*
+     n     t
+      \   /|
+       \ / | dp
+        b--b.x+1
+        |
+        |
+        n  
+    */
+
+
+    // https://www.cnblogs.com/yaukey/archive/2013/06/04/normalmap_tangentspace_tbn.html
+    // https://www.cnblogs.com/yaukey/archive/2013/06/04/bumpmap_normalmap_tangentspace_tbn_ii.html
+    // https://zhuanlan.zhihu.com/p/144357517
+
+
+    /*
+        n = N.normalize()
+        b = B.normalize()
+        t = T.normalize()
+        e2 = P2 - P0;
+        e1 = P1 - P0;
+
+        N                  T                    pi - pj = (ui - uj)t + (vi-vj)b
+         \               p1t                    pi - pj = (pit - pjt)t + (pib - pjb)b
+          \              /   
+           \           p2t    P2_______P1       e2, e1 uv value:
+            \          /        ╲     ╱             (t2, b2) = (u2 - u0, v2 - v0)
+             \        /        e2╲   ╱e1            (t1, b1) = (u1 - u0, v1 - v0)
+              \     p0t           ╲ ╱           -->
+               \    /              P0               e2 = t2 * t + b2 * b
+                \  /                                e1 = t1 * t + b1 * b
+                 \/                             -->
+                  ------p2b----p0b---p1b--B         | e1 |   | t1 b1 |  | t |
+                                                    |    | = |       |  |   |
+                                                    | e2 |   | t2 b2 |  | b |
+                                                -->
+                                                | x1 y1 z1 |   | t1 b1 |  | xt yt zt |
+                                                |          | = |       |  |          |
+                                                | x2 y2 z2 |   | t2 b2 |  | xb yb zb |
+
+
+    */
+
+    auto n = normal;
+    auto x = n.x();
+    auto y = n.y();
+    auto z = n.z();
+    // auto t = Vector3f(
+    //     x * y / sqrt(x * x + z * z ),
+    //     sqrt(x * x + z * z),
+    //     z * y / sqrt(x * x + z * z )
+    // );
+    Vector3f t;
+    // 切线空间
+    // https://zhuanlan.zhihu.com/p/139593847
+    // https://zhuanlan.zhihu.com/p/370927083
+    t << 
+        x * y / sqrt(x * x + z * z ),
+        sqrt(x * x + z * z),
+        z * y / sqrt(x * x + z * z );
+    auto b = n.cross(t);
+
+    Matrix3f TBN;
+    TBN << t, b, n;
+
+    auto u = payload.tex_coords(0);
+    auto v = payload.tex_coords(1);
+    auto w = payload.texture -> width;
+    auto h = payload.texture -> height;
+    auto dpp = payload.texture -> getColor(u, v).norm();
+    auto dup = payload.texture -> getColor(u + 1.0f / w, v).norm();
+    auto dvp = payload.texture -> getColor(u, v + 1.0f / h).norm();
+    auto du = kh * kn * (dup - dpp);
+    auto dv = kh * kn * (dvp - dpp);
+    auto ln = Vector3f(-du, -dv, 1);
+
+    normal = (TBN * ln).normalized();
 
     Eigen::Vector3f result_color = {0, 0, 0};
     result_color = normal;
