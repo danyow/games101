@@ -190,6 +190,8 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload& payload)
     Eigen::Vector3f amb_light_intensity{10, 10, 10};
     Eigen::Vector3f eye_pos{0, 0, 10};
 
+
+    // 08-00:12:40
     float p = 150;
 
     Eigen::Vector3f color = payload.color;
@@ -207,33 +209,66 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload& payload)
               L
                \
                 l   n  -v-      Ld = kd(I/r2)max(0, n*l)
-                 \  |  /
+                 \  |  /        v unuse
                   \ | /
             _______\|/________
-                    p
+                    P
         */
         // 07-00:58:00
         auto L = light.position;
-        auto p = point;
+        auto P = point;
+        auto v = (eye_pos - P).normalized();
         auto n = normal;
-        auto pL = L - p;
-        auto l = pL.normalized();
+        auto PL = L - P;
+        auto l = PL.normalized();
 
         // 07-00:57:00
         auto I = light.intensity;
-        auto r2 = pL.dot(pL); //PL.sqrt();
+        auto r2 = PL.dot(PL); //PL.sqrt();
 
-        auto lpn = n.dot(l);
-        auto Ld = kd * (I / r2) * std::max(0.0f, lpn);
+        auto cos_lpn = n.dot(l);
+        // auto Ld = kd * (I / r2) * std::max(0.0f, cos_lpn);
+        auto Ld = kd.cwiseProduct(I) / r2 * std::max(0.0f, cos_lpn);
 
         result_color += Ld;
 
-        // kd * (I / (r * r)) * max()
-
         // specular highlights
+        // 08-00:07:00
+        /*
+              L
+               \         R
+                l   n   /  v     
+                 \  |  /  /      R
+                  \ | /  /
+            _______\|/  /________
+                     P
+        */
+
+        // 08-00:07:22
+        /*
+              L                 h = bisector(v, l)
+               \                        v + l
+                l   n h   v       =  ------------
+                 \  | |  /           || v + l ||
+                  \ | | /
+            _______\| |/________  Ls = ks(I/r2)max(0, cos(nph))p
+                     P               = ks(I/r2)max(0, n*h)p
+        */
+        auto h = (v + l).normalized();
+        auto cos_nph = n.dot(h);
+        // auto Ls = ks * (I / r2) * std::pow(std::max(0.0f, cos_nph), p);
+        auto Ls = ks.cwiseProduct(I) / r2 * std::pow(std::max(0.0f, cos_nph), p);
+
+        result_color += Ls;
 
         // ambient lighting
+        // 08-00:15:05
+        // La = ka * Ia
+        auto Ia = amb_light_intensity;
+        // auto La = ka * Ia;
+        auto La = ka.cwiseProduct(Ia);
 
+        result_color += La;
     }
 
     return result_color * 255.f;
