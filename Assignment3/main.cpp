@@ -327,6 +327,15 @@ Eigen::Vector3f displacement_fragment_shader(const fragment_shader_payload& payl
 
     float kh = 0.2, kn = 0.1;
     
+
+    Eigen::Vector3f return_color = Vector3f(0, 0, 0);
+
+    if (payload.texture)
+    {
+        return_color = payload.texture -> getColor(payload.tex_coords(0), payload.tex_coords(1));
+    }
+    
+
     // TODO: Implement displacement mapping here
     // Let n = normal = (x, y, z)
     // Vector t = (x*y/sqrt(x*x+z*z),sqrt(x*x+z*z),z*y/sqrt(x*x+z*z))
@@ -338,17 +347,71 @@ Eigen::Vector3f displacement_fragment_shader(const fragment_shader_payload& payl
     // Position p = p + kn * n * h(u,v)
     // Normal n = normalize(TBN * ln)
 
+    auto P = payload.view_pos;
+    auto n = normal;
+    auto x = n.x();
+    auto y = n.y();
+    auto z = n.z();
+    Vector3f t;
+    t << 
+        x * y / sqrt(x * x + z * z ),
+        sqrt(x * x + z * z),
+        z * y / sqrt(x * x + z * z );
+    auto b = n.cross(t);
+
+    Matrix3f TBN;
+    TBN << t, b, n;
+
+    auto u = payload.tex_coords(0);
+    auto v = payload.tex_coords(1);
+    auto w = payload.texture -> width;
+    auto h = payload.texture -> height;
+    auto dpp = payload.texture -> getColor(u, v).norm();
+    auto dup = payload.texture -> getColor(u + 1.0f / w, v).norm();
+    auto dvp = payload.texture -> getColor(u, v + 1.0f / h).norm();
+    auto du = kh * kn * (dup - dpp);
+    auto dv = kh * kn * (dvp - dpp);
+    auto ln = Vector3f(-du, -dv, 1);
+
+    P = P + kn * n * dpp;
+    normal = (TBN * ln).normalized();
 
     Eigen::Vector3f result_color = {0, 0, 0};
 
-    for (auto& light : lights)
+        for (auto& light : lights)
     {
         // TODO: For each light source in the code, calculate what the *ambient*, *diffuse*, and *specular* 
         // components are. Then, accumulate that result on the *result_color* object.
 
+        // diffuse reflection
+        auto L = light.position;
+        // auto P = point;
+        auto v = (eye_pos - P).normalized();
+        auto n = normal;
+        auto PL = L - P;
+        auto l = PL.normalized();
 
+        auto I = light.intensity;
+        auto r2 = PL.dot(PL); 
+
+        auto cos_lpn = n.dot(l);
+        auto Ld = kd.cwiseProduct(I) / r2 * std::max(0.0f, cos_lpn);
+
+        result_color += Ld;
+
+        // specular highlights
+        auto h = (v + l).normalized();
+        auto cos_nph = n.dot(h);
+        auto Ls = ks.cwiseProduct(I) / r2 * std::pow(std::max(0.0f, cos_nph), p);
+
+        result_color += Ls;
+
+        // ambient lighting
+        auto Ia = amb_light_intensity;
+        auto La = ka.cwiseProduct(Ia);
+
+        result_color += La;
     }
-
     return result_color * 255.f;
 }
 
@@ -440,19 +503,31 @@ Eigen::Vector3f bump_fragment_shader(const fragment_shader_payload& payload)
 
     */
 
+    /*
+        FAQ:
+            (1) bump mapping 部分的 h(u,v)=texture_color(u,v).norm, 其中 u,v 是 tex_coords, w,h 是 texture 的宽度与高度
+            (2) rasterizer.cpp 中 v = t.toVector4()
+            (3) get_projection_matrix 中的 eye_fov 应该被转化为弧度制
+            (4) bump 与 displacement 中修改后的 normal 仍需要 normalize
+            (5) 可能用到的 eigen 方法：norm(), normalized(), cwiseProduct()
+            (6) 实现 h(u+1/w,v) 的时候要写成 h(u+1.0/w,v)
+            (7) 正规的凹凸纹理应该是只有一维参量的灰度图，而本课程为了框架使用的简便性而使用了一张 RGB 图作为凹凸纹理的贴图，因此需要指定一种规则将彩色投影到灰度，而我只是「恰好」选择了 norm 而已。为了确保你们的结果与我一致，我才要求你们都使用 norm 作为计算方法。
+            (8) bump mapping & displacement mapping 的计算的推导日后将会在光线追踪部分详细介绍，目前请按照注释实现。
+    */
     auto n = normal;
     auto x = n.x();
     auto y = n.y();
     auto z = n.z();
+    // 切线空间 abut t???
+    // https://zhuanlan.zhihu.com/p/139593847
+    // https://zhuanlan.zhihu.com/p/370927083
+    // http://games-cn.org/forums/topic/zuoye3-bump-mappingzhongtbndet-gongshizenmetuidaode/
     // auto t = Vector3f(
     //     x * y / sqrt(x * x + z * z ),
     //     sqrt(x * x + z * z),
     //     z * y / sqrt(x * x + z * z )
     // );
     Vector3f t;
-    // 切线空间
-    // https://zhuanlan.zhihu.com/p/139593847
-    // https://zhuanlan.zhihu.com/p/370927083
     t << 
         x * y / sqrt(x * x + z * z ),
         sqrt(x * x + z * z),
