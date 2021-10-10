@@ -1,1 +1,1 @@
-`mkdir build && cd build && cmake ../ && make ^C`
+`mkdir build && cd build && cmake ../ && make`
