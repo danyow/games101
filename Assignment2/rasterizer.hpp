@@ -96,7 +96,7 @@ namespace rst
         int get_index(int x, int y);
 
         int width, height;
-        int MSAA = 8;   // Bonus
+        int MSAA = 1;   // Bonus
 
         int next_id = 0;
         int get_next_id() { return next_id++; }

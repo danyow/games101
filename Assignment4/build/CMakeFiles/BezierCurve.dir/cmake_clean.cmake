@@ -1,7 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/BezierCurve.dir/main.cpp.o"
-  "BezierCurve.pdb"
   "BezierCurve"
+  "BezierCurve.pdb"
+  "CMakeFiles/BezierCurve.dir/main.cpp.o"
+  "CMakeFiles/BezierCurve.dir/main.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.
