@@ -1,3 +1,0 @@
-/home/danyow/Documents/cpp/games101/Assignment4/build/CMakeFiles/rebuild_cache.dir
-/home/danyow/Documents/cpp/games101/Assignment4/build/CMakeFiles/edit_cache.dir
-/home/danyow/Documents/cpp/games101/Assignment4/build/CMakeFiles/BezierCurve.dir

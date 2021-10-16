@@ -1,3 +1,0 @@
-/home/danyow/Documents/cpp/games101/Assignment0/build/CMakeFiles/rebuild_cache.dir
-/home/danyow/Documents/cpp/games101/Assignment0/build/CMakeFiles/edit_cache.dir
-/home/danyow/Documents/cpp/games101/Assignment0/build/CMakeFiles/Transformation.dir
