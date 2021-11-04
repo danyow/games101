@@ -204,11 +204,12 @@ int main(int argc, const char** argv)
         key = cv::waitKey(10);
 
         std::cout << "frame count: " << frame_count++ << '\n';
+        std::cout << "Key: " << key << '\n';
 
-        if (key == 'a') {
+        if (key == 1048673) {
             angle += 10;
         }
-        else if (key == 'd') {
+        else if (key == 1048676) {
             angle -= 10;
         }
     }

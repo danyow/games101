@@ -2,18 +2,26 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="Rasterizer" targetName="Rasterizer" />
+      <config projectName="RayTracing" targetName="RayTracing" />
     </generated>
   </component>
-  <component name="CMakeSettings">
+  <component name="CMakeSettings" AUTO_RELOAD="true">
     <configurations>
       <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8537eaca-d10c-495c-9105-8bb51be8d9bb" name="更改" comment="delete build">
+    <list default="true" id="8537eaca-d10c-495c-9105-8bb51be8d9bb" name="更改" comment="debugger add">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment0/pa0.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment1/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment1/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment5/Renderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment5/Renderer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment5/Triangle.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment5/Triangle.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment5/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment5/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment6/PA6.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment6/Renderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment6/Renderer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment6/Triangle.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment6/Triangle.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,9 +31,18 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assignment3/OBJ_Loader.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assignment3/rasterizer.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assignment2/main.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assignment3/global.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assignment2/rasterizer.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assignment3/main.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assignment3/rasterizer.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assignment3/CMakeLists.txt" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1yDFJcOEfZkIGfh5NtjnW68ZI4H" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -43,8 +60,9 @@
     <property name="cf.first.check.clang-format" value="false" />
     <property name="cidr.known.project.marker" value="true" />
     <property name="cmake.loaded.for.project" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="CPPToolchains" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/games101" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunManager" selected="CMake 应用程序.4">
     <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
@@ -52,27 +70,32 @@
         <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="0" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="BezierCurve" TARGET_NAME="Transformation" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="BezierCurve" RUN_TARGET_NAME="Transformation">
+    <configuration name="0" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="RayTracing" TARGET_NAME="Transformation" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="RayTracing" RUN_TARGET_NAME="Transformation">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="1" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="BezierCurve" TARGET_NAME="Rasterizer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="BezierCurve" RUN_TARGET_NAME="Rasterizer">
+    <configuration name="1" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="RayTracing" TARGET_NAME="Rasterizer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="RayTracing" RUN_TARGET_NAME="Rasterizer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="2" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="BezierCurve" TARGET_NAME="Rasterizer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="BezierCurve" RUN_TARGET_NAME="Rasterizer">
+    <configuration name="2" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="RayTracing" TARGET_NAME="Rasterizer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="RayTracing" RUN_TARGET_NAME="Rasterizer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="3" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="BezierCurve" TARGET_NAME="Rasterizer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="BezierCurve" RUN_TARGET_NAME="Rasterizer">
+    <configuration name="3" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="RayTracing" TARGET_NAME="Rasterizer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="RayTracing" RUN_TARGET_NAME="Rasterizer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="4" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="BezierCurve" TARGET_NAME="BezierCurve" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="BezierCurve" RUN_TARGET_NAME="BezierCurve">
+    <configuration name="4" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="RayTracing" TARGET_NAME="BezierCurve" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="RayTracing" RUN_TARGET_NAME="BezierCurve">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="5" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="RayTracing" TARGET_NAME="RayTracing" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="RayTracing" RUN_TARGET_NAME="RayTracing">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -83,14 +106,18 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake 应用程序.1" />
       <item itemvalue="CMake 应用程序.0" />
+      <item itemvalue="CMake 应用程序.1" />
       <item itemvalue="CMake 应用程序.2" />
       <item itemvalue="CMake 应用程序.3" />
       <item itemvalue="CMake 应用程序.4" />
+      <item itemvalue="CMake 应用程序.5" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\Danyow\AppData\Roaming\Subversion</configuration>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
       <changelist id="8537eaca-d10c-495c-9105-8bb51be8d9bb" name="更改" comment="" />
@@ -107,7 +134,22 @@
       <workItem from="1633616273922" duration="779000" />
       <workItem from="1633701336469" duration="207000" />
       <workItem from="1634398135910" duration="161000" />
-      <workItem from="1634400167487" duration="999000" />
+      <workItem from="1634400167487" duration="1087000" />
+      <workItem from="1634832814267" duration="1864000" />
+      <workItem from="1634911837688" duration="132000" />
+      <workItem from="1635260930464" duration="57000" />
+      <workItem from="1635261139670" duration="8000" />
+      <workItem from="1635261172285" duration="10000" />
+      <workItem from="1635261242877" duration="14000" />
+      <workItem from="1635261492905" duration="29000" />
+      <workItem from="1635561800812" duration="77000" />
+      <workItem from="1635561883709" duration="425000" />
+      <workItem from="1635564071757" duration="2539000" />
+      <workItem from="1635574888637" duration="8000" />
+      <workItem from="1635575616516" duration="2751000" />
+      <workItem from="1635952055260" duration="1895000" />
+      <workItem from="1635953975923" duration="2962000" />
+      <workItem from="1636035149581" duration="5401000" />
     </task>
     <task id="LOCAL-00001" summary="1 2 提交">
       <created>1633353562392</created>
@@ -151,7 +193,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634400945108</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="debugger add">
+      <created>1634401203109</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1634401203109</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -175,6 +224,7 @@
     <MESSAGE value="HW2.zip" />
     <MESSAGE value="build" />
     <MESSAGE value="delete build" />
-    <option name="LAST_COMMIT_MESSAGE" value="delete build" />
+    <MESSAGE value="debugger add" />
+    <option name="LAST_COMMIT_MESSAGE" value="debugger add" />
   </component>
 </project>
