@@ -119,7 +119,7 @@ public:
         bounding_box = Bounds3(min_vert, max_vert);
 
         std::vector<Object *> ptrs;
-        for (auto &tri : triangles)
+        for (auto &tri: triangles)
             ptrs.push_back(&tri);
 
         bvh = new BVHAccel(ptrs);
@@ -225,6 +225,14 @@ inline Intersection Triangle::getIntersection(Ray ray) {
         return inter;
     t_tmp = dotProduct(e2, qvec) * det_inv;
 
+    /*
+     *  这就是Moller-Trumbore算法的计算过程。一共得到三个变量：三角形的两个重心坐标u，v，还有距离t_tmp。
+     *
+     *  前面所有return都返回了默认初始化的inter，找到Intersection类的默认构造函数，可以发现inter.happened=false，刚好和失败return的条件（光线与三角形未相交）一致。
+     *
+     *  最后的返回值仍然是inter，把算法的成功条件写出来，在里面修改inter的成员值即可。第二步完成。
+     * */
+
     // TODO find ray triangle intersection
 
 
@@ -258,8 +266,18 @@ inline Intersection Triangle::getIntersection(Ray ray) {
 //    u = b1;
 //    v = b2;
 //    return (t > 0) && (b1 > 0) && (b2 > 0) && (1 - b1 - b2 > 0);
-    //    return false;
-
+    // `happened` 表示光与三角形是否出现了碰撞，这项为false时，整个框架不会再考虑剩余的所有元素；
+    inter.happened = (t_tmp > 0) && (u > 0) && (v > 0) && (1 - u - v > 0);
+    // `coords` 表示光首次打到三角形的坐标，可以用Ray类中重载的“( )”来计算；
+    inter.coords = ray(t_tmp);
+    // `normal` 就是三角形的 `normal`；
+    inter.normal = this->normal;
+    // `distance` 表示光从origin点出发到抵达coords的距离；
+    inter.distance = t_tmp;
+    // `obj` 应该是表示后边BVH树中叶子节点中所包含的 `primitive`，所以这里直接把这个函数所属的 `Triangle` 实例丢进去应该是正确的；
+    inter.obj = this;
+    // `m` 指三角形的材质。
+    inter.m = m;
 
     return inter;
 }

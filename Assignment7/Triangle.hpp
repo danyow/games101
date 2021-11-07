@@ -9,10 +9,9 @@
 #include <cassert>
 #include <array>
 
-bool rayTriangleIntersect(const Vector3f& v0, const Vector3f& v1,
-                          const Vector3f& v2, const Vector3f& orig,
-                          const Vector3f& dir, float& tnear, float& u, float& v)
-{
+bool rayTriangleIntersect(const Vector3f &v0, const Vector3f &v1,
+                          const Vector3f &v2, const Vector3f &orig,
+                          const Vector3f &dir, float &tnear, float &u, float &v) {
     Vector3f edge1 = v1 - v0;
     Vector3f edge2 = v2 - v0;
     Vector3f pvec = crossProduct(dir, edge2);
@@ -39,58 +38,61 @@ bool rayTriangleIntersect(const Vector3f& v0, const Vector3f& v1,
     return true;
 }
 
-class Triangle : public Object
-{
+class Triangle : public Object {
 public:
     Vector3f v0, v1, v2; // vertices A, B ,C , counter-clockwise order
     Vector3f e1, e2;     // 2 edges v1-v0, v2-v0;
     Vector3f t0, t1, t2; // texture coords
     Vector3f normal;
     float area;
-    Material* m;
+    Material *m;
 
-    Triangle(Vector3f _v0, Vector3f _v1, Vector3f _v2, Material* _m = nullptr)
-        : v0(_v0), v1(_v1), v2(_v2), m(_m)
-    {
+    Triangle(Vector3f _v0, Vector3f _v1, Vector3f _v2, Material *_m = nullptr)
+            : v0(_v0), v1(_v1), v2(_v2), m(_m) {
         e1 = v1 - v0;
         e2 = v2 - v0;
         normal = normalize(crossProduct(e1, e2));
-        area = crossProduct(e1, e2).norm()*0.5f;
+        area = crossProduct(e1, e2).norm() * 0.5f;
     }
 
-    bool intersect(const Ray& ray) override;
-    bool intersect(const Ray& ray, float& tnear,
-                   uint32_t& index) const override;
+    bool intersect(const Ray &ray) override;
+
+    bool intersect(const Ray &ray, float &tnear,
+                   uint32_t &index) const override;
+
     Intersection getIntersection(Ray ray) override;
-    void getSurfaceProperties(const Vector3f& P, const Vector3f& I,
-                              const uint32_t& index, const Vector2f& uv,
-                              Vector3f& N, Vector2f& st) const override
-    {
+
+    void getSurfaceProperties(const Vector3f &P, const Vector3f &I,
+                              const uint32_t &index, const Vector2f &uv,
+                              Vector3f &N, Vector2f &st) const override {
         N = normal;
         //        throw std::runtime_error("triangle::getSurfaceProperties not
         //        implemented.");
     }
-    Vector3f evalDiffuseColor(const Vector2f&) const override;
+
+    Vector3f evalDiffuseColor(const Vector2f &) const override;
+
     Bounds3 getBounds() override;
-    void Sample(Intersection &pos, float &pdf){
+
+    void Sample(Intersection &pos, float &pdf) {
         float x = std::sqrt(get_random_float()), y = get_random_float();
         pos.coords = v0 * (1.0f - x) + v1 * (x * (1.0f - y)) + v2 * (x * y);
         pos.normal = this->normal;
         pdf = 1.0f / area;
     }
-    float getArea(){
+
+    float getArea() {
         return area;
     }
-    bool hasEmit(){
+
+    bool hasEmit() {
         return m->hasEmission();
     }
 };
 
-class MeshTriangle : public Object
-{
+class MeshTriangle : public Object {
 public:
-    MeshTriangle(const std::string& filename, Material *mt = new Material())
-    {
+    MeshTriangle(const std::string &filename, Material *mt = new Material()) {
         objl::Loader loader;
         loader.LoadFile(filename);
         area = 0;
@@ -127,23 +129,22 @@ public:
 
         bounding_box = Bounds3(min_vert, max_vert);
 
-        std::vector<Object*> ptrs;
-        for (auto& tri : triangles){
+        std::vector<Object *> ptrs;
+        for (auto &tri: triangles) {
             ptrs.push_back(&tri);
             area += tri.area;
         }
         bvh = new BVHAccel(ptrs);
     }
 
-    bool intersect(const Ray& ray) { return true; }
+    bool intersect(const Ray &ray) { return true; }
 
-    bool intersect(const Ray& ray, float& tnear, uint32_t& index) const
-    {
+    bool intersect(const Ray &ray, float &tnear, uint32_t &index) const {
         bool intersect = false;
         for (uint32_t k = 0; k < numTriangles; ++k) {
-            const Vector3f& v0 = vertices[vertexIndex[k * 3]];
-            const Vector3f& v1 = vertices[vertexIndex[k * 3 + 1]];
-            const Vector3f& v2 = vertices[vertexIndex[k * 3 + 2]];
+            const Vector3f &v0 = vertices[vertexIndex[k * 3]];
+            const Vector3f &v1 = vertices[vertexIndex[k * 3 + 1]];
+            const Vector3f &v2 = vertices[vertexIndex[k * 3 + 2]];
             float t, u, v;
             if (rayTriangleIntersect(v0, v1, v2, ray.origin, ray.direction, t,
                                      u, v) &&
@@ -159,33 +160,30 @@ public:
 
     Bounds3 getBounds() { return bounding_box; }
 
-    void getSurfaceProperties(const Vector3f& P, const Vector3f& I,
-                              const uint32_t& index, const Vector2f& uv,
-                              Vector3f& N, Vector2f& st) const
-    {
-        const Vector3f& v0 = vertices[vertexIndex[index * 3]];
-        const Vector3f& v1 = vertices[vertexIndex[index * 3 + 1]];
-        const Vector3f& v2 = vertices[vertexIndex[index * 3 + 2]];
+    void getSurfaceProperties(const Vector3f &P, const Vector3f &I,
+                              const uint32_t &index, const Vector2f &uv,
+                              Vector3f &N, Vector2f &st) const {
+        const Vector3f &v0 = vertices[vertexIndex[index * 3]];
+        const Vector3f &v1 = vertices[vertexIndex[index * 3 + 1]];
+        const Vector3f &v2 = vertices[vertexIndex[index * 3 + 2]];
         Vector3f e0 = normalize(v1 - v0);
         Vector3f e1 = normalize(v2 - v1);
         N = normalize(crossProduct(e0, e1));
-        const Vector2f& st0 = stCoordinates[vertexIndex[index * 3]];
-        const Vector2f& st1 = stCoordinates[vertexIndex[index * 3 + 1]];
-        const Vector2f& st2 = stCoordinates[vertexIndex[index * 3 + 2]];
+        const Vector2f &st0 = stCoordinates[vertexIndex[index * 3]];
+        const Vector2f &st1 = stCoordinates[vertexIndex[index * 3 + 1]];
+        const Vector2f &st2 = stCoordinates[vertexIndex[index * 3 + 2]];
         st = st0 * (1 - uv.x - uv.y) + st1 * uv.x + st2 * uv.y;
     }
 
-    Vector3f evalDiffuseColor(const Vector2f& st) const
-    {
+    Vector3f evalDiffuseColor(const Vector2f &st) const {
         float scale = 5;
         float pattern =
-            (fmodf(st.x * scale, 1) > 0.5) ^ (fmodf(st.y * scale, 1) > 0.5);
+                (fmodf(st.x * scale, 1) > 0.5) ^ (fmodf(st.y * scale, 1) > 0.5);
         return lerp(Vector3f(0.815, 0.235, 0.031),
                     Vector3f(0.937, 0.937, 0.231), pattern);
     }
 
-    Intersection getIntersection(Ray ray)
-    {
+    Intersection getIntersection(Ray ray) {
         Intersection intersec;
 
         if (bvh) {
@@ -194,15 +192,17 @@ public:
 
         return intersec;
     }
-    
-    void Sample(Intersection &pos, float &pdf){
+
+    void Sample(Intersection &pos, float &pdf) {
         bvh->Sample(pos, pdf);
         pos.emit = m->getEmission();
     }
-    float getArea(){
+
+    float getArea() {
         return area;
     }
-    bool hasEmit(){
+
+    bool hasEmit() {
         return m->hasEmission();
     }
 
@@ -214,23 +214,22 @@ public:
 
     std::vector<Triangle> triangles;
 
-    BVHAccel* bvh;
+    BVHAccel *bvh;
     float area;
 
-    Material* m;
+    Material *m;
 };
 
-inline bool Triangle::intersect(const Ray& ray) { return true; }
-inline bool Triangle::intersect(const Ray& ray, float& tnear,
-                                uint32_t& index) const
-{
+inline bool Triangle::intersect(const Ray &ray) { return true; }
+
+inline bool Triangle::intersect(const Ray &ray, float &tnear,
+                                uint32_t &index) const {
     return false;
 }
 
 inline Bounds3 Triangle::getBounds() { return Union(Bounds3(v0, v1), v2); }
 
-inline Intersection Triangle::getIntersection(Ray ray)
-{
+inline Intersection Triangle::getIntersection(Ray ray) {
     Intersection inter;
 
     if (dotProduct(ray.direction, normal) > 0)
@@ -254,10 +253,64 @@ inline Intersection Triangle::getIntersection(Ray ray)
 
     // TODO find ray triangle intersection
 
+
+    /*
+     *  这就是Moller-Trumbore算法的计算过程。一共得到三个变量：三角形的两个重心坐标u，v，还有距离t_tmp。
+     *
+     *  前面所有return都返回了默认初始化的inter，找到Intersection类的默认构造函数，可以发现inter.happened=false，刚好和失败return的条件（光线与三角形未相交）一致。
+     *
+     *  最后的返回值仍然是inter，把算法的成功条件写出来，在里面修改inter的成员值即可。第二步完成。
+     * */
+
+    // TODO find ray triangle intersection
+
+
+    // 13-00:49:30
+    //[1] 直线与三角形相交Moller Trumbore算法推导：https://www.blurredcode.com/2020/04/%E7%9B%B4%E7%BA%BF%E4%B8%8E%E4%B8%89%E8%A7%92%E5%BD%A2%E7%9B%B8%E4%BA%A4moller-trumbore%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/
+    //[2] 克莱姆法则：https://zh.wikipedia.org/wiki/%E5%85%8B%E8%90%8A%E5%A7%86%E6%B3%95%E5%89%87
+    //[3] Möller–Trumbore 算法：https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+    //[4] 行列式的几何意义：https://www.cnblogs.com/andyjee/p/3491487.html
+    /*
+     *  O + tD = (1-b1-b2)P0 + b1P1 + b2P2
+     * */
+//    auto P0 = v0;
+//    auto P1 = v1;
+//    auto P2 = v2;
+//    auto O = orig;
+//    auto D = dir;
+//
+//    auto E1 = P1 - P0;
+//    auto E2 = P2 - P0;
+//    auto S = O - P0;
+//    auto S1 = crossProduct(D, E2);
+//    auto S2 = crossProduct(S, E1);
+//
+//    auto ES1 = dotProduct(S1, E1);
+//
+//    float t = dotProduct(S2, E2) / ES1;
+//    float b1 = dotProduct(S1, S) / ES1;
+//    float b2 = dotProduct(S2, D) / ES1;
+//
+//    tnear = t;
+//    u = b1;
+//    v = b2;
+//    return (t > 0) && (b1 > 0) && (b2 > 0) && (1 - b1 - b2 > 0);
+    // `happened` 表示光与三角形是否出现了碰撞，这项为false时，整个框架不会再考虑剩余的所有元素；
+    inter.happened = (t_tmp > 0) && (u > 0) && (v > 0) && (1 - u - v > 0);
+    // `coords` 表示光首次打到三角形的坐标，可以用Ray类中重载的“( )”来计算；
+    inter.coords = ray(t_tmp);
+    // `normal` 就是三角形的 `normal`；
+    inter.normal = this->normal;
+    // `distance` 表示光从origin点出发到抵达coords的距离；
+    inter.distance = t_tmp;
+    // `obj` 应该是表示后边BVH树中叶子节点中所包含的 `primitive`，所以这里直接把这个函数所属的 `Triangle` 实例丢进去应该是正确的；
+    inter.obj = this;
+    // `m` 指三角形的材质。
+    inter.m = m;
+    inter.emit = m->m_emission;
     return inter;
 }
 
-inline Vector3f Triangle::evalDiffuseColor(const Vector2f&) const
-{
+inline Vector3f Triangle::evalDiffuseColor(const Vector2f &) const {
     return Vector3f(0.5, 0.5, 0.5);
 }

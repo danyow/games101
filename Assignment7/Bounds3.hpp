@@ -96,7 +96,50 @@ inline bool Bounds3::IntersectP(const Ray& ray, const Vector3f& invDir,
     // invDir: ray direction(x,y,z), invDir=(1.0/x,1.0/y,1.0/z), use this because Multiply is faster that Division
     // dirIsNeg: ray direction(x,y,z), dirIsNeg=[int(x>0),int(y>0),int(z>0)], use this to simplify your logic
     // TODO test if ray bound intersects
+    // 这个函数的作用是判断包围盒 `BoundingBox` 与光线是否相交，你需要按照课程介绍的算法实现求交过程。
+    // 14-00:29:40
 
+//    auto t_n_x = (pMin.x - ray.origin.x) / ray.direction.x;
+//    auto t_n_y = (pMin.y - ray.origin.y) / ray.direction.y;
+//    auto t_n_z = (pMin.z - ray.origin.z) / ray.direction.z;
+//    auto t_n_2 = std::max(std::max(t_n_x, t_n_y), t_n_z);
+//
+//    auto t_f_x = (pMax.x - ray.origin.x) / ray.direction.x;
+//    auto t_f_y = (pMax.y - ray.origin.y) / ray.direction.y;
+//    auto t_f_z = (pMax.z - ray.origin.z) / ray.direction.z;
+//    auto t_f_1 = std::min(std::min(t_f_x, t_f_y), t_f_z);
+//    if (t_n_2 < t_f_1) {
+//        return true;
+//    }
+//    return false;
+    // t_min & t_max along x/y/z-axis
+    auto t_pmax = (pMax - ray.origin) * invDir;
+    auto t_pmin = (pMin - ray.origin) * invDir;
+
+    // USER_NOTE: need to shuffle min & max
+    Vector3f t_min(
+            std::min(t_pmin.x, t_pmax.x),
+            std::min(t_pmin.y, t_pmax.y),
+            std::min(t_pmin.z, t_pmax.z)
+    );
+    Vector3f t_max(
+            std::max(t_pmin.x, t_pmax.x),
+            std::max(t_pmin.y, t_pmax.y),
+            std::max(t_pmin.z, t_pmax.z)
+    );
+
+    auto t_enter = std::max({t_min.x, t_min.y, t_min.z});
+    auto t_exit = std::min({t_max.x, t_max.y, t_max.z});
+    bool inter = (t_exit > t_enter) && (t_exit > 0);
+
+    // std::clog << "pMin: " << pMin << " " << "pMax: " << pMax << std::endl;
+    // std::clog << "ray: " << ray;
+    // std::clog << "invDir: " << invDir << std::endl;
+    // std::clog << "t_min: " << t_min << " " << "t_max: " << t_max << std::endl << std::endl;
+    // std::clog << "t_enter: " << t_enter << " " << "t_exit: " << t_exit << std::endl << std::endl;
+    // std::clog << "inter" << inter << std::endl;
+
+    return inter;
 }
 
 inline Bounds3 Union(const Bounds3& b1, const Bounds3& b2)

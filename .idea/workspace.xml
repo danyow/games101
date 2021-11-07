@@ -11,17 +11,18 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8537eaca-d10c-495c-9105-8bb51be8d9bb" name="更改" comment="debugger add">
+    <list default="true" id="8537eaca-d10c-495c-9105-8bb51be8d9bb" name="更改" comment="5678">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assignment0/pa0.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assignment1/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment1/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assignment5/Renderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment5/Renderer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assignment5/Triangle.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment5/Triangle.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assignment5/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment5/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assignment6/PA6.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment6/BVH.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment6/BVH.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment6/Bounds3.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment6/Bounds3.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assignment6/Renderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment6/Renderer.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assignment6/Triangle.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment6/Triangle.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment7/BVH.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment7/BVH.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment7/Bounds3.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment7/Bounds3.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment7/Scene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment7/Scene.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment7/Triangle.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment7/Triangle.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +32,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -64,7 +66,7 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
-  <component name="RunManager" selected="CMake 应用程序.4">
+  <component name="RunManager" selected="CMake Application.7">
     <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="CLION.EXTERNAL.BUILD" enabled="true" />
@@ -100,18 +102,30 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="6" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="RayTracing" TARGET_NAME="RayTracing" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="RayTracing" RUN_TARGET_NAME="RayTracing">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="7" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="RayTracing" TARGET_NAME="RayTracing" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="RayTracing" RUN_TARGET_NAME="RayTracing">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake 应用程序.0" />
-      <item itemvalue="CMake 应用程序.1" />
-      <item itemvalue="CMake 应用程序.2" />
-      <item itemvalue="CMake 应用程序.3" />
-      <item itemvalue="CMake 应用程序.4" />
-      <item itemvalue="CMake 应用程序.5" />
+      <item itemvalue="CMake Application.0" />
+      <item itemvalue="CMake Application.1" />
+      <item itemvalue="CMake Application.2" />
+      <item itemvalue="CMake Application.3" />
+      <item itemvalue="CMake Application.4" />
+      <item itemvalue="CMake Application.5" />
+      <item itemvalue="CMake Application.6" />
+      <item itemvalue="CMake Application.7" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
@@ -149,7 +163,10 @@
       <workItem from="1635575616516" duration="2751000" />
       <workItem from="1635952055260" duration="1895000" />
       <workItem from="1635953975923" duration="2962000" />
-      <workItem from="1636035149581" duration="5401000" />
+      <workItem from="1636035149581" duration="5424000" />
+      <workItem from="1636124699562" duration="3073000" />
+      <workItem from="1636128726502" duration="9723000" />
+      <workItem from="1636286874055" duration="4796000" />
     </task>
     <task id="LOCAL-00001" summary="1 2 提交">
       <created>1633353562392</created>
@@ -200,7 +217,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634401203109</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="debugger add">
+      <created>1636042283670</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1636042283670</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -225,6 +249,18 @@
     <MESSAGE value="build" />
     <MESSAGE value="delete build" />
     <MESSAGE value="debugger add" />
-    <option name="LAST_COMMIT_MESSAGE" value="debugger add" />
+    <MESSAGE value="5678" />
+    <option name="LAST_COMMIT_MESSAGE" value="5678" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Assignment7/BVH.cpp</url>
+          <line>116</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
